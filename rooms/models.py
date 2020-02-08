@@ -76,13 +76,16 @@ class Room(core_models.TimeStampedModel):
     def __str__(self):
         return self.name
 
+    def save(self, *args, **kwargs):
+        self.city = str.capitalize(self.city)
+        super().save(*args, **kwargs)  # Call the real save() method
+
     def total_rating(self):
         all_reviews = self.review.all()
         all_ratings = 0
         reviews_number = len(all_reviews)
-        if reviews_number == 0:
-            reviews_number = 1
-        for review in all_reviews:
-            all_ratings += review.rating_average()
-
-        return all_ratings / reviews_number
+        if len(all_reviews) > 0:
+            for review in all_reviews:
+                all_ratings += review.rating_average()
+            return round(all_ratings / reviews_number)
+        return 0
