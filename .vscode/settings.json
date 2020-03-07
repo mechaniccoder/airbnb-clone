@@ -1,5 +1,5 @@
 {
-  "python.pythonPath": "/home/y1andyu/.local/share/virtualenvs/airbnb-clone-vXN3C3Wk/bin/python",
+  "python.pythonPath": "/home/mechaniccoder/.local/share/virtualenvs/3._Airbnb-clone-lZ9CkzUW/bin/python",
   "python.linting.pylintEnabled": false,
   "python.linting.flake8Args": ["--max--line--length=88"],
   "python.linting.flake8Enabled": true,
