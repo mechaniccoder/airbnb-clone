@@ -36,11 +36,11 @@ class HomeView(ListView):
 
 
 # def room_detail(request, pk):
- 
+
 #     try:
 #         room = models.Room.objects.get(pk=pk)
 #         return render(request, "rooms/detail.html", context={"room": room})
-    
+
 #     except models.Room.DoesNotExist:
 #         raise Http404()
 
@@ -49,5 +49,11 @@ class RoomDetail(DetailView):
 
     """ DetailView는 자동으로 pk인자를 찾고 object를 찾지못하면
     자동으로 404페이지를 return한다. """
-    
+
     model = models.Room
+
+
+def search(request):
+    city = request.GET.get("city", "Anywhere")
+    city = str.capitalize(city)
+    return render(request, "rooms/search.html", {"city": city})
