@@ -70,9 +70,9 @@
         </div>
 
         <div>
-            <label for="super_host">By Superhost Only?</label>
-            <input type="checkbox" name="super_host" id="super_host" 
-            {% if super_host %}
+            <label for="superhost">By Superhost Only?</label>
+            <input type="checkbox" name="superhost" id="superhost" 
+            {% if superhost %}
                 checked
             {% endif %}/>
         </div>
@@ -114,5 +114,11 @@
 
     {% for room in rooms %}
         <h3>{{room.name}}</h3>
+        <h3 style="color: pink;">
+            {% for item in room.amenities.all %}
+                {{ item }} /
+            {% endfor %}
+        </h3>
     {% endfor %}
+
 {% endblock content %}
