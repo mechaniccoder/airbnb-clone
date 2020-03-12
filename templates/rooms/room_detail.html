@@ -16,9 +16,10 @@
         (superhost)
     {% endif %}
     </h2>
+    
     <h3>Amenities</h3>
     <ul>
-    {% for a in room.amenities.all  %}
+    {% for a in room.amenities.all %}
         <li>{{a}}</li>
     {% endfor %}
     </ul>

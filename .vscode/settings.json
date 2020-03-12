@@ -1,8 +1,11 @@
 {
-  "python.pythonPath": "/home/mechaniccoder/.local/share/virtualenvs/2._airbnb_clone-icQrGKDE/bin/python",
+  "python.pythonPath": "/home/mechaniccoder/.local/share/virtualenvs/Airbnb-clone-3Pv1AHha/bin/python",
   "python.linting.pylintEnabled": false,
-  "python.linting.flake8Args": ["--max--line--length=88"],
+  "python.linting.flake8Args": [
+    "--max--line--length=88"
+  ],
   "python.linting.flake8Enabled": true,
   "python.linting.enabled": true,
-  "python.formatting.provider": "black"
+  "python.formatting.provider": "black",
+  "editor.formatOnSave": true
 }

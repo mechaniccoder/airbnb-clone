@@ -5,13 +5,13 @@ verify_ssl = true
 
 [dev-packages]
 flake8 = "*"
-black = "*"
 
 [packages]
 django = "==2.2.5"
 pillow = "*"
 django-countries = "*"
 django-seed = "*"
+black = "*"
 
 [requires]
 python_version = "3.6"

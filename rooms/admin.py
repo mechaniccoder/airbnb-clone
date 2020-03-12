@@ -53,6 +53,7 @@ class RoomAdmin(admin.ModelAdmin):
         "check_in",
         "check_out",
         "instant_book",
+        "room_type",
         "count_amenities",
         "count_photos",
         "total_rating",
