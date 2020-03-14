@@ -35,7 +35,7 @@ class RoomAdmin(admin.ModelAdmin):
             "More About the Space",
             {
                 "classes": ("collapse",),  # 숨기기 기능
-                "fields": ("amenities", "facilities", "house_rules",),
+                "fields": ("amenities", "facilities", "house_rules", "room_type"),
             },
         ),
         ("Last Details", {"fields": ("host",)}),
