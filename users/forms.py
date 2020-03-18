@@ -24,7 +24,7 @@ class LoginForm(forms.Form):
 class SignUpForm(forms.ModelForm):
     class Meta:
         model = models.User
-        fields = ("first_name", "last_name", "email", "birthdate")
+        fields = ("first_name", "last_name", "email")
 
     # first_name = forms.CharField(max_length=80)
     # last_name = forms.CharField(max_length=80)

@@ -13,6 +13,7 @@ django-countries = "*"
 django-seed = "*"
 black = "*"
 django-livereload-server = "*"
+django-dotenv = "*"
 
 [requires]
 python_version = "3.8"
