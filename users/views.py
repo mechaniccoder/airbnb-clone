@@ -1,5 +1,6 @@
 import os
 import requests
+from django.core.files.base import ContentFile
 from django.shortcuts import render
 from django.views import View
 from django.views.generic import FormView
@@ -97,9 +98,11 @@ class GithubException(Exception):
 # 깃허브에서 다시 다음 뷰로 다이렉트 된다.
 def github_callback(request):
     try:
+        print("진입")
         client_id = os.environ.get("GH_ID")
         client_secret = os.environ.get("GH_SECRET")
-        code = request.GET.get("code")  # 깃허브에서 access token과 바꾸기 위해 주는 코드
+        code = request.GET.get("code", None)  # 깃허브에서 access token과 바꾸기 위해 주는 코드
+        redirect_uri = "http://127.0.0.1:8000/users/login"
         if code is not None:
             # ID, PASSWORD, CODE를 POST한다.
             token_request = requests.post(
@@ -108,6 +111,7 @@ def github_callback(request):
                 headers={"Accept": "application/json"},
             )
             token_json = token_request.json()
+            print(token_json)
             # Json에 error가 있는 지 확인한다.
             error = token_json.get("error", None)
             # Error가 있다면
@@ -135,6 +139,7 @@ def github_callback(request):
                 email = profile_json.get("email")
                 bio = profile_json.get("bio")
                 try:
+                    user = models.User.objects.get(email=email)
                     # 과거에 로그인한 방법이 github가 아니라면
                     if user.login_method != models.User.LOGIN_GITHUB:
                         # error를 raise한다.
@@ -150,6 +155,7 @@ def github_callback(request):
                         username=email,
                         bio=bio,
                         login_method=models.User.LOGIN_GITHUB,
+                        email_verified=True,
                     )
                     user.set_unusable_password()
                     user.save()
@@ -166,3 +172,68 @@ def github_callback(request):
         # send a error message
         return redirect(reverse("users:login"))
 
+
+def kakao_login(reqeust):
+    client_id = os.environ.get("KAKAO_ID")
+    redirect_uri = "http://127.0.0.1:8000/users/login/kakao/callback"
+    return redirect(
+        f"https://kauth.kakao.com/oauth/authorize?client_id={client_id}&redirect_uri={redirect_uri}&response_type=code"
+    )
+
+
+class KakaoException(Exception):
+    pass
+
+
+def kakao_callback(request):
+    try:
+        code = request.GET.get("code")
+        client_id = os.environ.get("KAKAO_ID")
+        redirect_uri = "http://127.0.0.1:8000/users/login/kakao/callback"
+        token_request = requests.post(
+            f"https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id={client_id}&redirect_uri={redirect_uri}&code={code}"
+        )
+        token_json = token_request.json()
+        error = token_json.get("error", None)
+        if error is not None:
+            raise KakaoException()
+        access_token = token_json.get("access_token")
+        profile_request = requests.get(
+            "https://kapi.kakao.com/v2/user/me",
+            headers={"Authorization": f"Bearer {access_token}"},
+        )
+        profile_json = profile_request.json()
+        print(profile_json)
+        kakao_account = profile_json.get("kakao_account")
+        email = kakao_account.get("email", None)
+        if email is None:
+            raise KakaoException()
+        properties = profile_json.get("properties")
+        nickname = properties.get("nickname")
+        profile_image = properties.get("profile_image")
+        print(profile_image)
+        try:
+            user = models.User.objects.get(email=email)
+            if user.login_method != models.User.LOGIN_KAKAO:
+                raise KakaoException()
+        except models.User.DoesNotExist:
+            user = models.User.objects.create(
+                email=email,
+                username=email,
+                first_name=nickname,
+                login_method=models.User.LOGIN_KAKAO,
+                email_verified=True,
+            )
+            user.set_unusable_password()
+            user.save()
+            if profile_image is not None:
+                photo_request = requests.get(profile_image)
+                user.avatar.save(
+                    f"{nickname}-avatar", ContentFile(photo_request.content)
+                )
+        login(request, user)
+        return redirect(reverse("core:home"))
+
+    except KakaoException:
+
+        return redirect(reverse("users:login"))
