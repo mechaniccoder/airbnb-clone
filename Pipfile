@@ -5,6 +5,7 @@ verify_ssl = true
 
 [dev-packages]
 flake8 = "*"
+awsebcli = "*"
 
 [packages]
 django = "==2.2.5"
@@ -15,6 +16,7 @@ black = "*"
 django-livereload-server = "*"
 django-dotenv = "*"
 requests = "*"
+pipenv-to-requirements = "*"
 
 [requires]
 python_version = "3.8"
