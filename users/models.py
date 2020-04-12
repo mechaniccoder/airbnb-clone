@@ -5,6 +5,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.utils.html import strip_tags
 from django.template.loader import render_to_string
+from core import managers as core_managers
 
 # Create your models here.
 
@@ -58,6 +59,8 @@ class User(AbstractUser):
         max_length=50, choices=LOGIN_CHOICES, default=LOGIN_EMAIL
     )
 
+    objects = core_managers.CustomUserManager()
+
     def __str__(self):
         return self.username
 
@@ -78,4 +81,3 @@ class User(AbstractUser):
             )
             self.save()
         return
-
