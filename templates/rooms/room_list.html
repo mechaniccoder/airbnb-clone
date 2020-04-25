@@ -2,22 +2,28 @@
 {% block content %}
 
 <div class="container mx-auto">
-    <div
-        class="mb-24 bg-gray-800 bg-cover bg-center h-50vh mt-32 rounded-xl"
-        style="
-            background-image: url(https://images.unsplash.com/photo-1536315238512-4c8cebdaaf93?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop);
-        "
-    ></div>
+    <div class="-mx-40 mb-24 bg-gray-800 bg-cover bg-center h-50vh mt-32 rounded-xl"
+        style="background-image: url(https://images.unsplash.com/photo-1536315238512-4c8cebdaaf93?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop);">
+    </div>
 
-    {% for room in rooms %} {% include 'partials/room_card.html' with room=room %} {% endfor %}
+    <div class="flex flex-wrap -mx-40">
+        {% for room in rooms %} {% include 'partials/room_card.html' with room=room %} {% endfor %}
+    </div>
 
-    <h4>
+    <h4 class="container flex justify-center items-center text-lg mt-6 mb-3">
         {% if page_obj.has_previous %}
         <!--page 유효성 검사를 하므로 꼭 if문을 쓰고 태그를 주자 !-->
-        <a href="?page={{page_obj.previous_page_number}}">Previous</a>
-        {% endif %} Page {{page_obj.number}} of {{page_obj.paginator.num_pages}}
+        <a href="?page={{page_obj.previous_page_number}}">
+            <i class="fas fa-chevron-left text-teal-400"></i>
+        </a>
+        {% endif %}
+
+        <span class="mx-4">{{page_obj.number}} of {{page_obj.paginator.num_pages}}</span>
+
         {% if page_obj.has_next %}
-        <a href="?page={{page_obj.next_page_number}}">Next</a>
+        <a href="?page={{page_obj.next_page_number}}">
+            <i class="fas fa-chevron-right text-teal-400"></i>
+        </a>
         {% endif %}
     </h4>
 </div>

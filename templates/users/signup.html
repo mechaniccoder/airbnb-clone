@@ -8,11 +8,60 @@
 {% endblock search_bar %}
 
 {% block content %}
-    {% include "partials/social_login.html" %}
-    
-    <form method='POST' action="{% url "users:signup" %}">
-    {% csrf_token %}
-        {{form.as_p}}
-        <button>Sign Up</button>
-    </form>
+    <div class="container mx-auto my-10 flex flex-col items-center  border border-gray-400 xl:w-2/6 lg:w-3/5 md:1/2 w-full p-4 rounded-xl">
+        {% include "partials/social_login.html" %}
+        
+        <form method='POST' action="{% url "users:signup" %}" class="mb-6">
+            {% csrf_token %}
+
+            {% if  form.non_field_errors %}
+                {% for error in form.non_field_errors %}
+                    <span class="text-red-700 font-medium text-sm">{{error}}</span>
+                {% endfor %}
+            {% endif %}
+
+            {{form.first_name}}
+            {% if  form.first_name.errors %}
+                {% for error in form.first_name.errors %}
+                    <span class="text-red-700 font-medium text-sm">{{error}}</span>            
+                {% endfor %}
+            {% endif %}
+
+            {{form.last_name}}
+            {% if  form.last_name.errors %}
+                {% for error in form.last_name.errors %}
+                    <span class="text-red-700 font-medium text-sm">{{error}}</span>
+           
+                {% endfor %}
+            {% endif %}
+
+            {{form.email}}
+            {% if  form.email.errors %}
+                {% for error in form.email.errors %}
+                    <span class="text-red-700 font-medium text-sm">{{error}}</span>
+                {% endfor %}
+            {% endif %}
+
+            {{form.password}}
+            {% if  form.password.errors %}
+                {% for error in form.password.errors %}
+                    <span class="text-red-700 font-medium text-sm">{{error}}</span>          
+                {% endfor %}
+            {% endif %}
+
+            {{form.password1}}
+            {% if  form.password1.errors %}
+                {% for error in form.password1.errors %}
+                    <span class="text-red-700 font-medium text-sm">{{error}}</span>          
+                {% endfor %}
+            {% endif %}
+
+            <button class="btn bg-red-400 text-white font-semibold">Sign Up</button>
+        </form>
+
+        <div>
+            <span class="mr-2">Have an account?</span>
+            <a href="{% url "users:signup" %}" class="text-teal-500">Log in</a>
+        </div>
+    </div>
 {% endblock content %}   

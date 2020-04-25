@@ -11,7 +11,22 @@
         @apply border-gray-600;
     }
     a {
-        @apply flex h-full items-center px-5;
+        @apply text-lg flex h-full items-center px-5;
+        
+    }
+}
+.btn {
+    @apply w-full rounded py-4 text-center;
+}
+input {
+    @apply btn text-left border border-gray-600 px-5;
+    &:focus {
+        @apply outline-none border-teal-500;
+    }
+}
+form {
+    input {
+        @apply mb-3;
     }
 }
 

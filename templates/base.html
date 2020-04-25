@@ -6,18 +6,22 @@
     <title>{% block page_title %}{% endblock page_title %}| Nbnb</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
     <link rel="stylesheet" href="{% static "css/styles.css" %}">
 </head>
 
-<body class="text-gray-800 mt-24">
-    <header class="container max-w-full flex items-center justify-between px-6 h-20 border-b border-gray-300 fixed bg-white inset-0">
+<body class="text-gray-800 mt-24 font-semibold font-sans">
+    <header
+        class="container max-w-full flex items-center justify-between px-6 h-20 border-b border-gray-300 fixed bg-white inset-0">
         <div class="flex items-center w-1/3">
             <a class="mr-6" href="{% url "core:home" %}">
                 <img class="w-8" src="{% static "img/logo.png" %}" />
             </a>
             {% block search_bar %}
             <form class="w-9/12" method="get" action="{% url "rooms:search" %}">
-                <input class="search-box w-full border px-3 py-3 placeholder-gray-600 text-gray-600 text-sm font-bold rounded-sm w-1/3 shadow-md hover:shadow-lg focus:outline-none " name="city" placeholder="Search by City" />
+                <input
+                    class="search-box text-lg w-full border px-2 py-2 placeholder-gray-600 text-gray-600 text-sm font-bold rounded-sm w-1/3 shadow-md hover:shadow-lg focus:outline-none "
+                    name="city" placeholder="Search by City" />
             </form>
             {% endblock search_bar %}
         </div>

@@ -29,7 +29,7 @@ def all_rooms(request):
 
 class HomeView(ListView):
     model = models.Room
-    paginate_by = 10
+    paginate_by = 12
     ordering = "created"
     paginate_orphans = 5
     context_object_name = "rooms"
@@ -134,4 +134,3 @@ def search(request):
         form = forms.SearchForm()
 
     return render(request, "rooms/search.html", {"form": form})
-
