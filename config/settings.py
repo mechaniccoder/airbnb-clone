@@ -7,7 +7,7 @@ For more information on this file, see
 https://docs.djangoproject.com/en/2.2/topics/settings/
 
 For the full list of settings and their values, see
-https://docs.djangoproject.com/en/2.2/ref/settings/
+https://docs.djangoproject.com/en/2.2/ref/settings/w
 """
 
 import os
@@ -28,6 +28,7 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET", "WcL!^WW!neiezU^OuLkg")
 DEBUG = os.environ.get("DEBUG") == "True"
 ALLOWED_HOSTS = [
     ".elasticbeanstalk.com",
+    "127.0.0.1",
 ]
 
 # Application definition
@@ -38,7 +39,7 @@ DJANGO_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
-    "livereload",
+    # "livereload",
     "django.contrib.staticfiles",
 ]
 
@@ -67,7 +68,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "livereload.middleware.LiveReloadScript",
+    # "livereload.middleware.LiveReloadScript",
 ]
 
 ROOT_URLCONF = "config.urls"
