@@ -10,8 +10,7 @@
 # `Pipfile.lock` and then regenerate `requirements*.txt`.
 ################################################################################
 
-entrypoints==0.3
-flake8==3.7.9
+flake8==3.8.0a2
 mccabe==0.6.1
-pycodestyle==2.5.0
-pyflakes==2.1.1
+pycodestyle==2.6.0a1
+pyflakes==2.2.0
