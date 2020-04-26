@@ -1,9 +1,10 @@
 import os
 import requests
+from django.contrib import messages
 from django.core.files.base import ContentFile
 from django.shortcuts import render
 from django.views import View
-from django.views.generic import FormView
+from django.views.generic import FormView, DetailView
 from django.shortcuts import render, redirect, reverse
 from django.urls import reverse_lazy
 from django.contrib.auth import authenticate, login, logout
@@ -41,6 +42,7 @@ class LoginView(FormView):
 
 
 def log_out(request):
+    messages.info(request, "See you later!")
     logout(request)
     return redirect(reverse("core:home"))
 
@@ -93,7 +95,6 @@ class GithubException(Exception):
 # 깃허브에서 다시 다음 뷰로 다이렉트 된다.
 def github_callback(request):
     try:
-        print("진입")
         client_id = os.environ.get("GH_ID")
         client_secret = os.environ.get("GH_SECRET")
         code = request.GET.get("code", None)  # 깃허브에서 access token과 바꾸기 위해 주는 코드
@@ -106,12 +107,11 @@ def github_callback(request):
                 headers={"Accept": "application/json"},
             )
             token_json = token_request.json()
-            print(token_json)
             # Json에 error가 있는 지 확인한다.
             error = token_json.get("error", None)
             # Error가 있다면
             if error is not None:
-                raise GithubException()
+                raise GithubException("Can't get access token")
             # Error가 없다면
             else:
                 # json에서 access token을 가져온다.
@@ -138,7 +138,7 @@ def github_callback(request):
                     # 과거에 로그인한 방법이 github가 아니라면
                     if user.login_method != models.User.LOGIN_GITHUB:
                         # error를 raise한다.
-                        raise GithubException
+                        raise GithubException(f"please log in with: {user.login_method}")
                     else:
                         pass
                 # 만약 github로 권한을 준 이력이 없다면
@@ -154,16 +154,16 @@ def github_callback(request):
                     )
                     user.set_unusable_password()
                     user.save()
-                # 어찌됐든 결국엔 user를 로그인시킨다.
-                finally:
-                    login(request, user)
+                login(request, user)
+                messages.success(request, f"Welcome back {user.first_name}")
                 return redirect(reverse("core:home"))
             # 받아온 json에 username이 없다면
             else:
-                raise GithubException()
+                raise GithubException("Can't get your profile")
         else:
-            raise GithubException()
-    except Exception:
+            raise GithubException("Can't get code")
+    except GithubException as e:
+        messages.error(request, e)
         # send a error message
         return redirect(reverse("users:login"))
 
@@ -191,26 +191,24 @@ def kakao_callback(request):
         token_json = token_request.json()
         error = token_json.get("error", None)
         if error is not None:
-            raise KakaoException()
+            raise KakaoException("Can't get authorization code")
         access_token = token_json.get("access_token")
         profile_request = requests.get(
             "https://kapi.kakao.com/v2/user/me",
             headers={"Authorization": f"Bearer {access_token}"},
         )
         profile_json = profile_request.json()
-        print(profile_json)
         kakao_account = profile_json.get("kakao_account")
         email = kakao_account.get("email", None)
         if email is None:
-            raise KakaoException()
+            raise KakaoException("Please also give me your email")
         properties = profile_json.get("properties")
         nickname = properties.get("nickname")
         profile_image = properties.get("profile_image")
-        print(profile_image)
         try:
             user = models.User.objects.get(email=email)
             if user.login_method != models.User.LOGIN_KAKAO:
-                raise KakaoException()
+                raise KakaoException(f"please log in with: {user.login_method}")
         except models.User.DoesNotExist:
             user = models.User.objects.create(
                 email=email,
@@ -227,8 +225,13 @@ def kakao_callback(request):
                     f"{nickname}-avatar", ContentFile(photo_request.content)
                 )
         login(request, user)
+        messages.success(request, f"Welcome back {user.first_name}")
         return redirect(reverse("core:home"))
-
-    except KakaoException:
-
+    except KakaoException as e:
+        messages.error(request, e)
         return redirect(reverse("users:login"))
+
+
+class UserProfileView(DetailView):
+    model = models.User
+    context_object_name = "user_obj"

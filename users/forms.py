@@ -31,12 +31,8 @@ class SignUpForm(forms.ModelForm):
             "email": forms.EmailInput(attrs={"placeholder": "E-mail"})
         }
 
-    # first_name = forms.CharField(max_length=80)
-    # last_name = forms.CharField(max_length=80)
-    # email = forms.EmailField()
     password = forms.CharField(widget=forms.PasswordInput(attrs={"placeholder":"Password"}))
     password1 = forms.CharField(widget=forms.PasswordInput(attrs={"placeholder": "Confirm Password"}), label="Confirm Password")
-
 
     def clean_password1(self):
         password = self.cleaned_data.get("password")
@@ -50,18 +46,22 @@ class SignUpForm(forms.ModelForm):
     def clean_email(self):
         email = self.cleaned_data.get("email")
         try:
-            models.User.objects.get(username=email)
-            raise ValueError("This email exists")
+            models.User.objects.get(email=email)
+            raise forms.ValidationError("This email already exists")
         except models.User.DoesNotExist:
             return email
+
+    # def clean_email(self):
+    #     email = self.cleaned_data.get("email")
+    #     if models.User.objects.get(email=email):
+    #         raise forms.ValidationError("This email already exists")
+    #     else:
+    #         return email
             
-
-
-
     def save(self, *args, **kwargs):
         user = super().save(commit=False)
-        print(email) 
         password = self.cleaned_data.get("password")
+        email = self.cleaned_data.get("email")
         user.username = email
         user.set_password(password)
         user.save()
