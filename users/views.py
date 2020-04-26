@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.core.files.base import ContentFile
 from django.shortcuts import render
 from django.views import View
-from django.views.generic import FormView, DetailView
+from django.views.generic import FormView, DetailView, UpdateView
 from django.shortcuts import render, redirect, reverse
 from django.urls import reverse_lazy
 from django.contrib.auth import authenticate, login, logout
@@ -235,3 +235,20 @@ def kakao_callback(request):
 class UserProfileView(DetailView):
     model = models.User
     context_object_name = "user_obj"
+
+
+class UpdateUserView(UpdateView):
+    model = models.User
+    template_name = "users/update-profile.html"
+    fields = (
+        "last_name",
+        "first_name",
+        "avatar",
+        "gender",
+        "bio",
+        "birthdate",
+        "language",
+        "currency"
+    )
+    def get_object(self, queryset=None):
+        return self.request.user
