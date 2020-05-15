@@ -42,7 +42,7 @@ class HouseRule(AbstractItem):
 class Photo(core_models.TimeStampedModel):
 
     caption = models.CharField(max_length=80)
-    file = models.ImageField(upload_to="room_photos")
+    file = models.ImageField(upload_to='room_photos')
     room = models.ForeignKey("Room", related_name="photos", on_delete=models.CASCADE)
 
     def __str__(self):

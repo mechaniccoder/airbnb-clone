@@ -1,11 +1,9 @@
 {
-  "python.pythonPath": "/home/mechaniccoder/.local/share/virtualenvs/airbnb-clone-B50tgLr4/bin/python",
-  "python.linting.pylintEnabled": false,
-  "python.linting.flake8Args": [
-    "--max--line--length=100"
-  ],
-  "python.linting.flake8Enabled": true,
-  "python.linting.enabled": true,
-  "python.formatting.provider": "black",
-  "liveServer.settings.multiRootWorkspaceName": "airbnb_clone"
+    "python.pythonPath": "/home/mechaniccoder/.local/share/virtualenvs/airbnb-clone-B50tgLr4/bin/python",
+    "python.linting.pylintEnabled": false,
+    "python.linting.flake8Args": ["--max--line--length=150"],
+    "python.linting.flake8Enabled": true,
+    "python.linting.enabled": true,
+    "liveServer.settings.multiRootWorkspaceName": "airbnb_clone",
+    "python.formatting.provider": "black"
 }

@@ -1,18 +1,12 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block page_title %} {{room.name}} {% endblock page_title %} {% block content %}
 
-{% block page_title %}
-    {{room.name}}
-{% endblock page_title %}
-
-{% block content %}
-
-    <div class="container mx-auto max-w-full h-75vh flex mb-20">
-        <div class="h-full w-1/2 bg-cover bg-center" style="background-image:url({{room.first_photo}});"></div>
-        <div class="h-full w-1/2 flex flex-wrap">
-            {% for photo in room.get_next_four_photos %}
-                <div class="w-1/2 h-auto bg-cover bg-center" style="background-image:url({{photo.file.url}})"></div>
-            {% endfor %} 
-        </div>
+<div class="container mx-auto max-w-full h-75vh flex mb-20">
+    <div class="h-full w-1/2 bg-cover bg-center" style="background-image:url({{room.first_photo}});"></div>
+    <div class="h-full w-1/2 flex flex-wrap">
+        {% for photo in room.get_next_four_photos %}
+        <div class="w-1/2 h-auto bg-cover bg-center" style="background-image:url({{photo.file.url}})"></div>
+        {% endfor %}
     </div>
+</div>
 
 {% endblock %}
