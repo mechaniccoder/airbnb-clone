@@ -8,14 +8,15 @@ from django.views.generic import FormView, DetailView, UpdateView
 from django.shortcuts import render, redirect, reverse
 from django.urls import reverse_lazy
 from django.contrib.auth import authenticate, login, logout
-from . import forms, models
+from django.contrib.auth.views import PasswordChangeView
+from django.contrib.messages.views import SuccessMessageMixin
+from . import forms, models, mixins
 
 
-class LoginView(FormView):
+class LoginView(mixins.LoggedOutOnlyView, FormView,):
 
     template_name = "users/login.html"
     form_class = forms.LoginForm
-    success_url = reverse_lazy("core:home")
 
     def form_valid(self, form):
         email = form.cleaned_data.get("email")
@@ -24,6 +25,14 @@ class LoginView(FormView):
         if user is not None:
             login(self.request, user)
         return super().form_valid(form)
+
+    def get_success_url(self):
+        next_arg = self.request.GET.get("next")
+        print(next_arg)
+        if next_arg is not None:
+            return next_arg
+        else:
+            return reverse("core:home")
 
     # def get(self, request):
     #     form = forms.LoginForm()
@@ -47,7 +56,7 @@ def log_out(request):
     return redirect(reverse("core:home"))
 
 
-class SignUpView(FormView):
+class SignUpView(mixins.LoggedOutOnlyView, FormView):
     template_name = "users/signup.html"
     form_class = forms.SignUpForm
     success_url = reverse_lazy("core:home")
@@ -138,7 +147,9 @@ def github_callback(request):
                     # 과거에 로그인한 방법이 github가 아니라면
                     if user.login_method != models.User.LOGIN_GITHUB:
                         # error를 raise한다.
-                        raise GithubException(f"please log in with: {user.login_method}")
+                        raise GithubException(
+                            f"please log in with: {user.login_method}"
+                        )
                     else:
                         pass
                 # 만약 github로 권한을 준 이력이 없다면
@@ -232,23 +243,50 @@ def kakao_callback(request):
         return redirect(reverse("users:login"))
 
 
-class UserProfileView(DetailView):
+class UserUserView(DetailView):
     model = models.User
     context_object_name = "user_obj"
 
 
-class UpdateUserView(UpdateView):
+class UpdateProfileView(mixins.LoggedOnlyView, SuccessMessageMixin, UpdateView):
     model = models.User
     template_name = "users/update-profile.html"
+    success_message = "Profile Updated"
     fields = (
         "last_name",
         "first_name",
-        "avatar",
+        # "avatar",
         "gender",
         "bio",
         "birthdate",
         "language",
-        "currency"
+        "currency",
     )
+
     def get_object(self, queryset=None):
         return self.request.user
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class=form_class)
+        form.fields["first_name"].widget.attrs = {"placeholder": "Fist name"}
+        form.fields["last_name"].widget.attrs = {"placeholder": "Last name"}
+        form.fields["gender"].widget.attrs = {"placeholder": "Gender"}
+        form.fields["bio"].widget.attrs = {"placeholder": "Bio"}
+        form.fields["birthdate"].widget.attrs = {"placeholder": "Birthdate"}
+        return form
+
+
+class UpdatePasswordView(mixins.EmailLoginOnlyView, mixins.LoggedOnlyView, SuccessMessageMixin, PasswordChangeView):
+    template_name = "users/change-password.html"
+    success_message = "Password Updated"
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class=form_class)
+        form.fields["old_password"].widget.attrs = {"placeholder": "Old Password"}
+        form.fields["new_password1"].widget.attrs = {"placeholder": "New Password"}
+        form.fields["new_password2"].widget.attrs = {"placeholder": "Confirm New Password"}
+        return form
+
+    def get_success_url(self):
+        return self.request.user.get_absolute_url()
+

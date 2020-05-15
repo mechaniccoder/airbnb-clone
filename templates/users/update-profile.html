@@ -1,34 +1,38 @@
 j{% extends "base.html" %}
 
 {% block page_title %}
-    Update Profile
+Update Profile
 {% endblock page_title %}
 
 {% block search_bar %}
 {% endblock search_bar %}
 
 {% block content %}
-    <div class="container mx-auto my-10 flex flex-col items-center  border border-gray-400 xl:w-2/6 lg:w-3/5 md:1/2 w-full p-4 rounded-xl">
-        {% include "partials/auth/social_login.html" %}
-        
-        <form method='POST' action="{% url "users:signup" %}" class="mb-4 w-full">
-            {% csrf_token %}
+<div
+    class="container mx-auto my-10 flex flex-col items-center  border border-gray-400 xl:w-2/6 lg:w-3/5 md:1/2 w-full p-4 rounded-xl">
+    {% include "partials/auth/social_login.html" %}
 
-            {% if  form.non_field_errors %}
-                {% for error in form.non_field_errors %}
-                    <span class="text-red-700 font-medium text-sm">{{error}}</span>
-                {% endfor %}
-            {% endif %}
+    <form method='POST' action="{% url "users:update-profile" %}" class="mb-4 w-full" enctype="multipart/form-data">
+        {% csrf_token %}
 
-            {% for field in form %}
-                {% include 'partials/auth/form_input.html' with field=field %}
+        {% if  form.non_field_errors %}
+            {% for error in form.non_field_errors %}
+                <span class="text-red-700 font-medium text-sm">{{error}}</span>
             {% endfor %}
-                
-            <button class="btn bg-red-500 text-white font-semibold">Update Profile</button>
-        </form>
+        {% endif %}
 
-        <div>
-            <a href="{% url "users:signup" %}" class="text-teal-500">Log in</a>
-        </div>
+        {% for field in form %}
+            {% include 'partials/auth/form_input.html' with field=field %}
+        {% endfor %}
+
+        <button class="btn bg-red-500 text-white font-semibold">Update Profile</button>
+        
+    </form>
+    
+    <div>
+        <a href="{% url "users:change-password" %}" class="text-teal-500">Change Password</a>
     </div>
-{% endblock content %}   
+    <!-- {% if obj.login_method == "email" %} -->
+    <!-- {% endif %} -->
+</div>
+{% endblock content %}

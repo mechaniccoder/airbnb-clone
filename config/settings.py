@@ -25,7 +25,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get("DJANGO_SECRET", "WcL!^WW!neiezU^OuLkg")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG") == "True"
+DEBUG = True
 ALLOWED_HOSTS = [
     ".elasticbeanstalk.com",
     "127.0.0.1",
@@ -172,12 +172,12 @@ if DEBUG is False:
         send_default_pii=True,
     )
 
-    DEFAULT_FILE_STORAGE = 'config.custom_storage.UploadStorage'
-    STATICFILES_STORAGE = 'config.custom_storage.StaticStorage'
+    DEFAULT_FILE_STORAGE = "config.custom_storage.UploadStorage"
+    STATICFILES_STORAGE = "config.custom_storage.StaticStorage"
     AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
     AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
     AWS_STORAGE_BUCKET_NAME = "airbnb-clone-seunghwan"
-    AWS_AUTO_CREATE_BUCKET = True    
+    AWS_AUTO_CREATE_BUCKET = True
 
     AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
     STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/static/"

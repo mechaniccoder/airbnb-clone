@@ -1,16 +1,15 @@
 {
   "name": "airbnb-clone",
   "version": "1.0.0",
-  "description": "",
   "dependencies": {},
   "devDependencies": {
     "autoprefixer": "^9.7.6",
     "gulp": "^4.0.2",
     "gulp-csso": "^4.0.1",
     "gulp-postcss": "^8.0.0",
-    "gulp-sass": "^4.0.2",
-    "node-sass": "^4.13.1",
-    "tailwindcss": "^1.2.0"
+    "gulp-sass": "^4.1.0",
+    "node-sass": "^4.14.1",
+    "tailwindcss": "^1.4.6"
   },
   "repository": {
     "type": "git",
@@ -19,5 +18,12 @@
   "scripts": {
     "css": "gulp"
   },
-  "homepage": "https://github.com/mechaniccoder/airbnb-clone#readme"
+  "homepage": "https://github.com/mechaniccoder/airbnb-clone#readme",
+  "bugs": {
+    "url": "https://github.com/mechaniccoder/airbnb-clone/issues"
+  },
+  "main": "gulpfile.js",
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }

@@ -12,6 +12,7 @@ urlpatterns = [
     path("logout/", views.log_out, name="logout"),
     path("signup/", views.SignUpView.as_view(), name="signup"),
     path("verify/<str:key>/", views.complete_verification, name="complete-verification"),
-    path("<int:pk>/", views.UserProfileView.as_view(), name="profile"),
-    path("update-profile/", views.UpdateUserView.as_view(), name="update-profile"),
+    path("<int:pk>/", views.UserUserView.as_view(), name="profile"),
+    path("update-profile/", views.UpdateProfileView.as_view(), name="update-profile"),
+    path("change-password/", views.UpdatePasswordView.as_view(), name="change-password"),
 ]
