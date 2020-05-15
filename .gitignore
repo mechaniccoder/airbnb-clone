@@ -127,7 +127,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-uploads/
 node_modules/
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
