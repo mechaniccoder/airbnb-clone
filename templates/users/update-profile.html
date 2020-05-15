@@ -1,4 +1,4 @@
-j{% extends "base.html" %}
+{% extends "base.html" %}
 
 {% block page_title %}
 Update Profile
@@ -8,8 +8,7 @@ Update Profile
 {% endblock search_bar %}
 
 {% block content %}
-<div
-    class="container mx-auto my-10 flex flex-col items-center  border border-gray-400 xl:w-2/6 lg:w-3/5 md:1/2 w-full p-4 rounded-xl">
+<div class="container mx-auto my-10 flex flex-col items-center  border border-gray-400 xl:w-2/6 lg:w-3/5 md:1/2 w-full p-4 rounded-xl">
     {% include "partials/auth/social_login.html" %}
 
     <form method='POST' action="{% url "users:update-profile" %}" class="mb-4 w-full" enctype="multipart/form-data">
