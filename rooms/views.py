@@ -1,7 +1,12 @@
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.http import Http404
 from django_countries import countries
-from django.views.generic import ListView, DetailView
-from django.shortcuts import render
+from django.views.generic import ListView, DetailView, UpdateView, CreateView, FormView
+from django.contrib.messages.views import SuccessMessageMixin
+from django.shortcuts import render, redirect, reverse
 from django.core.paginator import Paginator
+from users import mixins as user_mixins
 from . import models
 from . import forms
 
@@ -134,3 +139,79 @@ def search(request):
         form = forms.SearchForm()
 
     return render(request, "rooms/search.html", {"form": form})
+
+
+class EditRoomView(user_mixins.LoggedOnlyView, UpdateView):
+    model = models.Room
+    template_name = "rooms/room_edit.html"
+    fields = (
+        "name",
+        "description",
+        "country",
+        "city",
+        "price",
+        "address",
+        "guests",
+        "beds",
+        "bedrooms",
+        "baths",
+        "check_in",
+        "check_out",
+        "instant_book",
+        "host",
+        "room_type",
+        "amenities",
+        "facilities",
+        "house_rules",
+    )
+
+    def get_object(self, queryset=None):
+        room = super().get_object(queryset=queryset)
+        print(self)
+        if room.host.pk != self.request.user.pk:
+            raise Http404
+        return room
+
+
+class RoomPhotosView(user_mixins.LoggedOnlyView, DetailView):
+    model = models.Room
+    template_name = "rooms/room_photos.html"
+
+    def get_object(self, queryset=None):
+        room = super().get_object(queryset=queryset)
+        if room.host.pk != self.request.user.pk:
+            raise Http404
+        return room
+
+
+@login_required
+def delete_photo(request, room_pk, photo_pk):
+    user = request.user
+    try:
+        room = models.Room.objects.get(pk=room_pk)
+        if room.host.pk != user.pk:
+            messages.error(request, "Can't delete that photo")
+        else:
+            # 여기서 get으로 쓰는 것과 filter을 쓰는 것의 차이는 뭘까
+            # models.Photo.objects.get(pk=photo_pk).delete()
+            models.Photo.objects.filter(pk=photo_pk).delete()
+            messages.error(request, "Photo deleted")
+        return redirect(reverse("rooms:photos", kwargs={"pk": room_pk}))
+    except models.Room.DoesNotExist:
+        return redirect(reverse("core:home"))
+
+
+class AddPhotoView(user_mixins.LoggedOnlyView, SuccessMessageMixin, FormView):
+    model = models.Photo
+    template_name = "rooms/photo_add.html"
+    form_class = forms.CreatePhotoForm
+    fields = (
+        "caption",
+        "file",
+    )
+
+    def form_valid(self, form):
+        pk = self.kwargs.get('pk')
+        form.save(pk)
+        messages.success(self.request, "Photo uploaded")
+        return redirect(reverse("rooms:photos", kwargs={"pk":pk}))

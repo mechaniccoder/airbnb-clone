@@ -163,6 +163,11 @@ EMAIL_HOST_PASSWORD = os.environ.get("MAILGUN_PASSWORD")
 EMAIL_FROM = "sexy@sandbox094e39555ad74de49a4e755c58270d2d.mailgun.org"
 
 
+# Auth
+
+LOGIN_URL = "/"
+
+
 # Sentry
 
 if DEBUG is False:
