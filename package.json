@@ -19,11 +19,5 @@
     "css": "gulp"
   },
   "homepage": "https://github.com/mechaniccoder/airbnb-clone#readme",
-  "bugs": {
-    "url": "https://github.com/mechaniccoder/airbnb-clone/issues"
-  },
-  "main": "gulpfile.js",
-  "author": "",
-  "license": "ISC",
   "description": ""
 }
